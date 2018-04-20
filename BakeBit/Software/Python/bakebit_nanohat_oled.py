@@ -42,6 +42,7 @@ import threading
 import signal
 import os
 import socket
+import sina as weibo
 
 global width
 width=128
@@ -54,6 +55,16 @@ global pageIndex
 pageIndex=0
 global showPageIndicator
 showPageIndicator=False
+
+#weibo
+global flag
+flag = "CodeName:000..已启动..连接正常.."
+
+global countdown
+countdown = "年已经过去"
+
+global countdown_picpath
+countdown_picpath = "pic.png"
 
 oled.init()  #initialze SEEED OLED display
 oled.setNormalDisplay()      #Set display to normal mode (i.e non-inverse mode)
@@ -263,6 +274,13 @@ def receive_signal(signum, stack):
             update_page_index(3)
             draw_page()
 
+#weibo
+def send_flag(client):
+    weibo.send_message(client,flag)
+
+def send_countdown(client,year,num):
+    weibo.send_pic(client,str(year)+countdown+str(num)+"%",countdown_picpath)
+#image
 
 image0 = Image.open('0x0.png').convert('1')
 oled.drawImage(image0)
@@ -272,6 +290,11 @@ time.sleep(2)
 signal.signal(signal.SIGUSR1, receive_signal)
 signal.signal(signal.SIGUSR2, receive_signal)
 signal.signal(signal.SIGALRM, receive_signal)
+
+#weibo
+client=weibo.init_login()
+time.sleep(10)
+send_flag(client)
 
 
 while True:

@@ -14,6 +14,10 @@
 
 
 ## 版本迭代
+### v1.2
+* 接入微博API[^sina]
+* 开机自动发送微博
+
 ### v1.11
 * 替换开机界面
 * 重排主页时间显示界面
@@ -22,6 +26,11 @@
 
 
 
-[^Proj000]: 彩蛋人生
 
+
+
+
+
+[^Proj000]: 彩蛋人生
+[^sina]: [新浪微博 Python SDK](https://github.com/michaelliao/sinaweibopy)
 
