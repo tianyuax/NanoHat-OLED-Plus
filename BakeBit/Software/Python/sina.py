@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from weibo import APIClient
-
-global tag_url
-tag_url = ""#你的安全域名
+from utils import App_Key, App_Sec, Acc_Tkn, Exp_Tim, Cal_Url, Tag_Url
 
 def get_access_token(app_key, app_secret, callback_url):
     client = APIClient(app_key=app_key, app_secret=app_secret, redirect_uri=callback_url)
@@ -22,20 +20,20 @@ def get_access_token(app_key, app_secret, callback_url):
 
     return access_token, expires_in
 def init_login():
-    app_key = '' #你的API KEY
-    app_secret = '' #你的API SEC
-    access_token = '' #你的TOKEN
-    expires_in = '' #TOKEN的过期时间
-    callback_url = ''#回调网址
-    if access_token=='':
+    app_key = App_Key
+    app_secret = App_Sec
+    access_token = Acc_Tkn
+    expires_in = Exp_Tim
+    callback_url = Cal_Url
+    if ''==access_token:
         access_token, expires_in = get_access_token(app_key, app_secret, callback_url)
-    # 上面的语句运行一次后，请保存得到的access token
+    # 上面的语句运行一次后，请保存得到的access token和expires_in和到utils.py
     client = APIClient(app_key=app_key, app_secret=app_secret, redirect_uri=callback_url)
     client.set_access_token(access_token, expires_in)
     return client
 
 def send_message(client,message):
-    utext = unicode(message+tag_url,"UTF-8")
+    utext = unicode(message+Tag_Url,"UTF-8")
     client.post.statuses__share(status=utext)
 
 def send_pic(client,message,picpath):
