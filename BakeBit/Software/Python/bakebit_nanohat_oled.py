@@ -35,6 +35,10 @@ THE SOFTWARE.
 '''
 
 import bakebit_128_64_oled as oled
+import sina as weibo
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
 import time
 import sys
 import subprocess
@@ -42,8 +46,6 @@ import threading
 import signal
 import os
 import socket
-import sina as weibo
-from utils import Flag, Countdown_Words, Countdown_Picpath, Welcome_Picpath
 
 global width
 width=128
@@ -57,7 +59,7 @@ pageIndex=0
 global showPageIndicator
 showPageIndicator=False
 
-
+client=weibo.init_login()
 oled.init()  #initialze SEEED OLED display
 oled.setNormalDisplay()      #Set display to normal mode (i.e non-inverse mode)
 oled.setHorizontalMode()
@@ -138,8 +140,8 @@ def draw_page():
             else:
                 draw.rectangle((dotX, dotTop, dotX+dotWidth, dotTop+dotWidth), outline=255, fill=0)
             dotTop=dotTop+dotWidth+dotPadding
+
     if page_index==0:
-        ##ReDesigned by tianyuax
         text = time.strftime("%a %Y/%m/%d")
         draw.text((5,2),text,font=font14,fill=255)
         text = time.strftime("%X")
@@ -159,7 +161,7 @@ def draw_page():
         bottom = height-padding
         # Move left to right keeping track of the current x position for drawing shapes.
         x = 0
-        IPAddress = get_ip()
+	IPAddress = get_ip()
         cmd = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f\", $(NF-2)}'"
         CPU = subprocess.check_output(cmd, shell = True )
         cmd = "free -m | awk 'NR==2{printf \"Mem: %s/%sMB %.2f%%\", $3,$2,$3*100/$2 }'"
@@ -266,15 +268,8 @@ def receive_signal(signum, stack):
             update_page_index(3)
             draw_page()
 
-#weibo
-def send_flag(client):
-    weibo.send_message(client,Flag)
 
-def send_countdown(client,year,num):
-    weibo.send_pic(client,str(year)+Countdown_Words+str(num)+"%",Countdown_Picpath)
-#image
-
-image0 = Image.open(Welcome_Picpath).convert('1')
+image0 = Image.open('0x0.png').convert('1')
 oled.drawImage(image0)
 
 time.sleep(2)
@@ -283,11 +278,9 @@ signal.signal(signal.SIGUSR1, receive_signal)
 signal.signal(signal.SIGUSR2, receive_signal)
 signal.signal(signal.SIGALRM, receive_signal)
 
-#weibo
-client=weibo.init_login()
 time.sleep(10)
-send_flag(client)
 
+weibo.send_flag(client)
 
 while True:
     try:
