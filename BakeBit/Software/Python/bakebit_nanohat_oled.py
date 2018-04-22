@@ -43,6 +43,7 @@ import signal
 import os
 import socket
 import sina as weibo
+from PIL import Image,ImageDraw,ImageFont
 from utils import Flag, Countdown_Words, Countdown_Picpath, Welcome_Picpath
 
 global width
